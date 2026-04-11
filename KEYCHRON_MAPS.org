@@ -18,8 +18,8 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    Keeps '9' and '0' numbers in their original positions but swaps their shifted versions (parentheses) with the square bracket keys.
 
 *** Behavior Table
-| Physical Key   | Unshifted | Shifted (Shift Layer 3) |
-|----------------+-----------+-------------------------|
+| Physical Key | Unshifted | Shifted (Shift Layer 3) |
+|--------------+-----------+-------------------------|
 | *9*            | 9         | [                       |
 | *0*            | 0         | ]                       |
 | *[*            | (         | {                       |
