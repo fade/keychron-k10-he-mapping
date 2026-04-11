@@ -1,0 +1,54 @@
+#+TITLE: Keychron K10 HE Mapping Instructions
+#+AUTHOR: Gemini CLI
+#+DATE: 2026-04-11
+
+* Keychron K10 HE Configuration
+
+This document tracks custom key mappings for the Keychron K10 HE on Linux/Windows.
+
+** 1. Hyper Key Modification
+   Configures the left 'Windows' key (between left Ctrl and left Alt) to act as a *Hyper* key (LCtrl + LShift + LAlt + LGui).
+
+   - *Target Layer*: Layer 2 (Windows/Linux base)
+   - *Target Key*: Column 1, Row 5
+   - *Original Code*: =227= (Left GUI)
+   - *New Code*: =271= (Hyper / 0x010F)
+
+** 2. Parentheses & Square Brackets Swap
+   Keeps '9' and '0' numbers in their original positions but swaps their shifted versions (parentheses) with the square bracket keys.
+
+*** Behavior Table
+| Physical Key   | Unshifted | Shifted (Shift Layer 3) |
+|----------------+-----------+-------------------------|
+| *9*            | 9         | [                       |
+| *0*            | 0         | ]                       |
+| *[*            | (         | {                       |
+| *]*            | )         | }                       |
+
+*** Implementation Details
+   - *Layer 2 (Base)*:
+     - Left Shift: =20578= (LM(3, MOD_LSFT)) or =21027= (MO(3))
+     - [ Key: =550= (Left Parenthesis)
+     - ] Key: =551= (Right Parenthesis)
+   - *Layer 3 (Shift Layer)*:
+     - 9 Key: =47= (Left Bracket)
+     - 0 Key: =48= (Right Bracket)
+     - [ Key: =559= (Left Brace)
+     - ] Key: =560= (Right Brace)
+     - *Alpha Keys*: Map to shifted equivalents (Base + 512).
+
+** Application Steps
+   1. Open the [[https://launcher.keychron.com/][Keychron Launcher]].
+   2. Switch keyboard to *Win/Android* mode.
+   3. Authorize the device.
+   4. In the *Save/Load* tab, click *Load* and select =modified_swapped.json=.
+   
+   *Alternatively (Manual VIA)*:
+   - Use the *Any* key on Layer 2 (Col 1, Row 5) to set code =0x010F=.
+
+** Project Structure (~/system_scripts/keychron/)
+   - =original.json=: Stock keymap backup.
+   - =modified.json=: Only contains the Hyper key change.
+   - =modified_swapped.json=: Contains both Hyper and Bracket/Parentheses swap.
+   - =swap_brackets.py=: Script that generates the complex Layer 3 mapping and re-calculates the MD5 checksum.
+   - =fix_keymap.py=: Utility to fix MD5 checksum for Keychron Launcher compatibility.
