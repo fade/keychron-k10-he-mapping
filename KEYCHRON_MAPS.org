@@ -42,9 +42,36 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    2. Switch keyboard to *Win/Android* mode.
    3. Authorize the device.
    4. In the *Save/Load* tab, click *Load* and select =modified_swapped.json=.
-   
+
    *Alternatively (Manual VIA)*:
    - Use the *Any* key on Layer 2 (Col 1, Row 5) to set code =0x010F=.
+
+** Recovery After Factory Reset
+   If a factory reset becomes necessary, the Import path in the Launcher
+   is sensitive to device state and can silently skip layers if the
+   slider position and selected layer tab don't match the file's intent.
+   Symptoms of a partial write: the Launcher display shows the swap on
+   every layer, but the device only honors it in the wrong slider mode
+   (e.g. swap works in Mac/iOS but not Win/Android).
+
+   Reliable sequence:
+   1. Factory reset the keyboard.
+   2. Open the Launcher and confirm firmware is up to date.
+   3. Set the hardware Mac/Win slider to *Win/Android*.
+   4. In the Launcher, click the *Layer 2* tab (the target base layer).
+   5. Click *Import* and select =modified_swapped.json=.
+   6. Wait for "Imported Successfully".
+   7. Verify on the physical keyboard:
+      - =[= → =(=
+      - =]= → =)=
+      - Shift+9 → =[=
+      - Shift+0 → =]=
+      - Shift+[ → ={=
+      - Shift+] → =}=
+
+   If any slot fails after Import, click that key in the Layer 2 view
+   and manually reassign the keycode — per-click edits write live to
+   the active layer and bypass whatever Import state is stuck.
 
 ** Project Structure (~/system_scripts/keychron/)
    - =original.json=: Stock keymap backup.
