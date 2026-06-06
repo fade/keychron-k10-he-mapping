@@ -14,23 +14,34 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    - *Original Code*: =227= (Left GUI)
    - *New Code*: =271= (Hyper / 0x010F)
 
-** 2. Parentheses & Square Brackets Swap
-   Keeps '9' and '0' numbers in their original positions but swaps their shifted versions (parentheses) with the square bracket keys.
+** 2. Parentheses & Square Brackets (Fn Layer)
+   Layer 3 is a full pre-shifted layer that also relocates the brackets
+   onto the number row. It is reached with the *Fn* key, NOT with Shift.
+
+   *Why not Shift:* the K10 HE runs Keychron's Launcher firmware (no QMK
+   Key Overrides), so a key cannot both pass a real Shift modifier to the
+   OS and produce an *unshifted* bracket. Driving this layer from Shift
+   (=MO(3)= on the Shift keys) suppressed the Shift modifier entirely,
+   which broke Shift+Enter/Tab, range selection, and function-key chords
+   in terminals and GUIs. Shift must therefore stay a real modifier; the
+   bracket layer lives on Fn instead.
 
 *** Behavior Table
-| Physical Key | Unshifted | Shifted (Shift Layer 3) |
-|--------------+-----------+-------------------------|
-| *9*            | 9         | [                       |
-| *0*            | 0         | ]                       |
-| *[*            | (         | {                       |
-| *]*            | )         | }                       |
+   The physical =[= =]= keys are mapped directly to parentheses, so parens
+   need no Shift. Brackets and braces live on the Fn layer.
+| Physical Key | Tap | + Shift | + Fn (Layer 3) |
+|--------------+-----+---------+----------------|
+| *9*            | 9   | (       | [              |
+| *0*            | 0   | )       | ]              |
+| *[*            | (   | (       | {              |
+| *]*            | )   | )       | }              |
 
 *** Implementation Details
-   - *Layer 2 (Base)*:
-     - Left Shift: =20578= (LM(3, MOD_LSFT)) or =21027= (MO(3))
-     - [ Key: =550= (Left Parenthesis)
-     - ] Key: =551= (Right Parenthesis)
-   - *Layer 3 (Shift Layer)*:
+   - *Layer 2 (Win/Linux Base)*:
+     - Left Shift: =225= (KC_LSFT) — real modifier, must not be remapped.
+     - Right Shift: =229= (KC_RSFT) — real modifier, must not be remapped.
+     - Fn (row 5, col 12): =21027= (MO(3)) — momentary access to Layer 3.
+   - *Layer 3 (Fn Layer)*:
      - 9 Key: =47= (Left Bracket)
      - 0 Key: =48= (Right Bracket)
      - [ Key: =559= (Left Brace)
@@ -62,12 +73,14 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    5. Click *Import* and select =modified_swapped.json=.
    6. Wait for "Imported Successfully".
    7. Verify on the physical keyboard:
-      - =[= → =(=
-      - =]= → =)=
-      - Shift+9 → =[=
-      - Shift+0 → =]=
-      - Shift+[ → ={=
-      - Shift+] → =}=
+      - =[= → =(=    and  =]= → =)=
+      - Shift+9 → =(=   and  Shift+0 → =)=
+      - Fn+9 → =[=     and  Fn+0 → =]=
+      - Fn+[ → ={=     and  Fn+] → =}=
+      - *Shift is a real modifier:* Shift+Enter, Shift+Tab, Shift+click
+        range-select, and Shift+F-keys all work. (If Shift does nothing
+        as a modifier, the Shift keys have been left as =MO(3)= — reassign
+        Left Shift to =225= and Right Shift to =229= on Layer 2.)
 
    If any slot fails after Import, click that key in the Layer 2 view
    and manually reassign the keycode — per-click edits write live to
