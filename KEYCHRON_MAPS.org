@@ -7,12 +7,33 @@
 This document tracks custom key mappings for the Keychron K10 HE on Linux/Windows.
 
 ** 1. Hyper Key Modification
-   Configures the left 'Windows' key (between left Ctrl and left Alt) to act as a *Hyper* key (LCtrl + LShift + LAlt + LGui).
+   The left 'Windows' key (between left Ctrl and left Alt) sends *F13*,
+   and the host's XKB keymap turns F13 into =Hyper_L= on =Mod3=.
 
-   - *Target Layer*: Layer 2 (Windows/Linux base)
+   I moved Hyper off the keyboard's own Hyper code (=271=, 0x010F) because
+   that code is a chord of LCtrl, LShift, LAlt and LGui, so applications
+   saw =C-M-S-s= and never a Hyper modifier. F13 is free in every layer of
+   this keymap, so the host can give it any meaning without colliding
+   with another key.
+
+   - *Target Layers*: Layer 2 (Windows/Linux base) and Layer 3 (Fn), so
+     Hyper still works while Fn is held
    - *Target Key*: Column 1, Row 5
    - *Original Code*: =227= (Left GUI)
-   - *New Code*: =271= (Hyper / 0x010F)
+   - *New Code*: =104= (F13 / 0x0068)
+
+   Set it, and the checksum the Launcher checks, with:
+   : python3 fix_keymap.py modified_swapped.json 104
+
+   *Host side*: the =fade:f13_hyper= XKB option, from =~/.config/xkb= in
+   the dotfiles. Without it F13 arrives as =XF86Tools= and Hyper does
+   nothing.
+   - Wayland (libxkbcommon reads =~/.config/xkb= itself): add
+     =fade:f13_hyper= to the XKB options, e.g.
+     =XKB_DEFAULT_OPTIONS=ctrl:nocaps,shift:both_capslock,fade:f13_hyper=.
+   - X: append the symbols to the keymap and load it with the user path:
+     : setxkbmap -print | sed '/xkb_symbols/s/"\([^"]*\)"/"\1+fade(f13_hyper)"/' \
+     :     | xkbcomp -w 0 -I$HOME/.config/xkb - "$DISPLAY"
 
 ** 2. Parentheses & Square Brackets (Fn Layer)
    Layer 3 is a full pre-shifted layer that also relocates the brackets
@@ -55,7 +76,7 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    4. In the *Save/Load* tab, click *Load* and select =modified_swapped.json=.
 
    *Alternatively (Manual VIA)*:
-   - Use the *Any* key on Layer 2 (Col 1, Row 5) to set code =0x010F=.
+   - Use the *Any* key on Layers 2 and 3 (Col 1, Row 5) to set code =0x0068=.
 
 ** Recovery After Factory Reset
    If a factory reset becomes necessary, the Import path in the Launcher
@@ -91,4 +112,4 @@ This document tracks custom key mappings for the Keychron K10 HE on Linux/Window
    - =modified.json=: Only contains the Hyper key change.
    - =modified_swapped.json=: Contains both Hyper and Bracket/Parentheses swap.
    - =swap_brackets.py=: Script that generates the complex Layer 3 mapping and re-calculates the MD5 checksum.
-   - =fix_keymap.py=: Utility to fix MD5 checksum for Keychron Launcher compatibility.
+   - =fix_keymap.py=: Sets the Hyper key's keycode on Layers 2 and 3 and rewrites the MD5 checksum the Launcher checks.
